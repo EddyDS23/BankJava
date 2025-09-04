@@ -36,4 +36,8 @@ public class Client extends Person{
 		this.email = email;
 	}
 	
+	public List<Account> getAccounts(){
+		return accounts;
+	}
+	
 }

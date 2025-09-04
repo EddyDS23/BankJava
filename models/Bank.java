@@ -32,6 +32,7 @@ public class Bank {
 		return client;
 	}
 	
+	
 	public Client getCurrentUser(String email) {
 		for(Client c : clients) {
 			if(c.getEmail().equals(email)) {
@@ -41,6 +42,8 @@ public class Bank {
 		return null;
 		
 	}
+	
+	
 	
 	public boolean searchClientByEmail(String email) {
 		for(Client c : clients) {
@@ -98,7 +101,15 @@ public class Bank {
 	public boolean payWithDebitCard(String numberDebitCard, String pin ,double amount) {
 		DebitCard debitCard = getDebitCard(numberDebitCard);
 		
-		if(debitCard == null || !debitCard.getPin().equals(pin) || debitCard.getAccount().getBalance() < amount) {
+		if(debitCard == null) {
+			return false;
+		}
+		
+		if(!debitCard.getPin().equals(pin)) {
+			return false;
+		}
+		
+		if(debitCard.getAccount().getBalance() < amount) {
 			return false;
 		}
 		
@@ -134,7 +145,15 @@ public class Bank {
 	public boolean payWithCreditCard(String numberCreditCard, String pin, double amount) {
 		CreditCard creditCard = getCreditCard(numberCreditCard);
 		
-		if(creditCard == null || !creditCard.getPin().equals(pin) || creditCard.getCurrentDebt() + amount > creditCard.getLimitCredit() ) {
+		if(creditCard == null) {
+			return false;
+		}
+		
+		if(!creditCard.getPin().equals(pin)) {
+			return false;
+		}
+		
+		if( creditCard.getCurrentDebt() + amount > creditCard.getLimitCredit()) {
 			return false;
 		}
 		
@@ -151,9 +170,14 @@ public class Bank {
 		Account fromAccount  = getAccountByNumber(fromAccountNumber);
 		Account toAccount = getAccountByNumber(toFromAccount);
 		
-		if(fromAccount == null || toAccount == null || fromAccount.getBalance() < transferAmount || transferAmount <= 0) {
+		if(fromAccount == null || toAccount == null) {
 			return false;
 		}
+		
+		if(fromAccount.getBalance() < transferAmount || transferAmount <= 0) {
+			return false;
+		}
+		
 		
 		fromAccount.withDraw(transferAmount);
 		toAccount.deposit(transferAmount);
@@ -201,5 +225,17 @@ public class Bank {
 		return null;
 	}
 	
+	
+	public List<Card> getCards(){
+		return this.cards;
+	}
+	
+	public List<Account> getAccount(){
+		return this.accounts;
+	}
+	
+	public List<Client> getClients(){
+		return this.clients;
+	}
 	
 }
