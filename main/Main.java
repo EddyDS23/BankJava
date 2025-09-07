@@ -3,6 +3,7 @@ package main;
 import models.DebitCard;
 import models.Account;
 import models.Bank;
+import models.Card;
 import models.Client;
 import utils.AccountUtils;
 import utils.AccountUtils.AccountType;
@@ -141,11 +142,100 @@ public class Main {
 		}
 		
 	}
-		
 	
+	public static void optionsWithOutCard() {
+		Integer options = 0;
+		
+		while(options != 3) {
+			
+			System.out.println("\n======== Options =========");
+			System.out.println("1)Deposit");
+			System.out.println("2)WithDraw");
+			System.out.println("3)Salir");
+			System.out.println("============================");
+			System.out.println("Escoga un opcion");
+			
+			switch(options) {
+			case 1:
+				break;
+			case 2:
+				break;
+			case 3:
+				break;
+			default:
+			}
+			
+		}
+		
+	}
+	
+	public static void depositWithOutCard() {
+		
+		Account account = null;
+		
+		String numberAccount = inputUtils.askInput("Numero de cuenta: ", RegexUtils::checkNumberAccount, "Solo numeros y 11 digitos\n\n");
+		
+		for(Account accountFound: wachoPay.getAccount()) {
+			if(accountFound.getNumberAccount().equals(numberAccount)) {
+				account = accountFound;
+				break;
+			}
+		}
+		
+		if(account == null) {
+			System.out.println("Cuenta inexistente\n\n");
+			return;
+		}
+		
+		
+		Double amount = Double.parseDouble(inputUtils.askInput("Ingrese monto a depositar: ", RegexUtils::checkAmount, "Solo numeros positivos y hasta dos decimales"));
+		
+		Boolean success =account.deposit(amount);
+		
+		if(success) {
+			System.out.println("Deposito existoso a la cuenta "+ account.getNumberAccount()+"\n\n");
+		}else {
+			System.out.println("Ocurrio un error");
+		}
+		
+		
+		
+	}
+		
+	public static void withDrawWithOutCard() {
+		
+		DebitCard debitCard = null;
+		
+
+		String numberDebitCard = inputUtils.askInput("Numero de tarjeta: ", RegexUtils::checkNumberCardDebit, "Solo numeros y 16 digitos\n\n");
+		
+		for(Card cardFound: wachoPay.getCards()) {
+			if(cardFound.getNumberCard().equals(numberDebitCard) && cardFound instanceof DebitCard) {
+				debitCard = (DebitCard)cardFound;
+				break;
+			}
+		}
+		
+		
+		String pinInput = inputUtils.askInput("Ingrese pin: ", RegexUtils::checkPin, "Solo numeros y 4 digitos");
+		
+		if(!debitCard.getPin().equals(pinInput)) {
+			System.out.println("Pin incorrecto\n\n");
+		}
+		
+		System.out.println("Saldo disponible: "+debitCard.getAccount().getBalance()+"\n\n");
+		Double amount = Double.parseDouble(inputUtils.askInput("Ingrese monto a retirar: ", RegexUtils::checkAmount, "Solo numeros positivos y hasta dos decimales"));
+		
+		Boolean success = debitCard.withDrawByCard(amount);
+		
+		if(success) {
+			System.out.println("Retiro exitoso \n Saldo actual: "+debitCard.getBalance());
+		}else {
+			System.out.println("Ocurrio un error");
+		}
+		
+	}
 	
 }
 
-/*
- * Para actualizar el archivo
- */
+
